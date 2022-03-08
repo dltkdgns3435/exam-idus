@@ -2,6 +2,7 @@ package shlee.exam.idus.domain.member.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shlee.exam.idus.domain.member.entity.Member;
 import shlee.exam.idus.domain.member.enums.Sex;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.regex.Pattern;
 
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostMemberDto {
