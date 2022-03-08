@@ -3,6 +3,8 @@ package shlee.exam.idus.domain.member.dto.request;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import shlee.exam.idus.domain.member.entity.Member;
 import shlee.exam.idus.domain.member.enums.Sex;
 import shlee.exam.idus.global.exception.exceptions.RequestValidationException;
@@ -11,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PostMemberDtoTest {
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final String name = "이상훈";
     private final String nickname = "karry";
@@ -40,12 +43,14 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
+                postMemberDto.validation();
+                postMemberDto.encodePassword(passwordEncoder);
                 Member member = postMemberDto.toEntity();
 
                 //then
                 assertThat(member.getName()).isEqualTo(name);
                 assertThat(member.getNickname()).isEqualTo(nickname);
-                assertThat(member.getPassword()).isEqualTo(password);
+                assertThat(passwordEncoder.matches(password, member.getPassword())).isTrue();
                 assertThat(member.getPhone()).isEqualTo(phone);
                 assertThat(member.getEmail()).isEqualTo(email);
                 assertThat(member.getSex()).isEqualTo(Sex.valueOf(sex));
@@ -69,7 +74,7 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
-                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::toEntity);
+                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::validation);
 
                 //then
                 assertThat(exception.getMessage()).isEqualTo("이름은 한글, 영문 대소문자만 입력 가능합니다.");
@@ -90,7 +95,7 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
-                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::toEntity);
+                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::validation);
 
                 //then
                 assertThat(exception.getMessage()).isEqualTo("별명은 영문 소문자만 입력 가능합니다.");
@@ -111,7 +116,7 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
-                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::toEntity);
+                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::validation);
 
                 //then
                 assertThat(exception.getMessage()).isEqualTo("비밀번호는 영문 대문자, 영문 소문자, 특수 문자, 숫자 각 1개 이상씩 포함해야 합니다.");
@@ -132,7 +137,7 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
-                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::toEntity);
+                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::validation);
 
                 //then
                 assertThat(exception.getMessage()).isEqualTo("휴대폰번호는 '-' 제외 숫자만 입력해주세요.");
@@ -153,7 +158,7 @@ class PostMemberDtoTest {
                         .build();
 
                 //when
-                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::toEntity);
+                RequestValidationException exception = assertThrows(RequestValidationException.class, postMemberDto::validation);
 
                 //then
                 assertThat(exception.getMessage()).isEqualTo("올바른 형식의 이메일을 입력해주세요.");

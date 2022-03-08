@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import shlee.exam.idus.domain.member.entity.Member;
 import shlee.exam.idus.domain.member.enums.Sex;
 import shlee.exam.idus.global.exception.exceptions.RequestValidationException;
@@ -41,7 +42,7 @@ public class PostMemberDto {
 
     private String sex;
 
-    private void validation() {
+    public void validation() {
         String nameRule = "^[가-힣a-zA-Z ]*$";
         String nicknameRule = "^[a-z]*$";
         String passwordRule = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{10,}$";
@@ -64,8 +65,11 @@ public class PostMemberDto {
             throw new RequestValidationException("올바른 형식의 이메일을 입력해주세요.");
     }
 
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
+    }
+
     public Member toEntity() {
-        validation();
         Sex sex = this.sex == null ? null : this.sex.equals("M") ? Sex.M : this.sex.equals("F") ? Sex.F : null;
 
         return Member.builder()
