@@ -29,18 +29,17 @@ public class RedisConfig {
     }
 
     @PreDestroy
-    public void stopRedis() throws Exception {
+    public void stopRedis() {
         if (redisServer != null) {
             redisServer.stop();
         }
     }
-    private boolean isArmMac() throws Exception {
+    private boolean isArmMac() {
         return System.getProperty("os.arch").equals("aarch64") &&
                 System.getProperty("os.name").equals("Mac OS X");
     }
 
     private File getRedisFileForArmMac() throws IOException {
-        File file = new ClassPathResource("redis/redis-server-m1-mac").getFile();
-        return file;
+        return new ClassPathResource("redis/redis-server-m1-mac").getFile();
     }
 }
