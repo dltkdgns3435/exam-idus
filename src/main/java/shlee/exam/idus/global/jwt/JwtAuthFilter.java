@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import shlee.exam.idus.domain.member.repository.DeniedTokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
+    private final DeniedTokenRepository deniedTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -23,7 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             if(tokenOpn.isPresent()){
                 String token = tokenOpn.get();
-                if (jwtTokenProvider.validateToken(token)) {
+                if (jwtTokenProvider.validateToken(token) && deniedTokenRepository.findById(token).isPresent()) {
                     Authentication auth = jwtTokenProvider.getAuthentication(token);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 } else {
