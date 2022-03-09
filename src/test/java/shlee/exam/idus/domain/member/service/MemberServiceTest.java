@@ -12,8 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import shlee.exam.idus.domain.member.dto.domain.MemberAccount;
 import shlee.exam.idus.domain.member.dto.request.LoginMemberDto;
 import shlee.exam.idus.domain.member.dto.request.PostMemberDto;
+import shlee.exam.idus.domain.member.entity.DeniedToken;
 import shlee.exam.idus.domain.member.entity.Member;
 import shlee.exam.idus.domain.member.enums.Sex;
+import shlee.exam.idus.domain.member.repository.DeniedTokenRepository;
 import shlee.exam.idus.domain.member.repository.MemberRepository;
 import shlee.exam.idus.global.exception.exceptions.MemberEmailDuplicateException;
 import shlee.exam.idus.global.exception.exceptions.MemberNotFountException;
@@ -41,6 +43,9 @@ class MemberServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Mock
+    private DeniedTokenRepository deniedTokenRepository;
 
     private final String name = "이상훈";
     private final String nickname = "karry";
@@ -204,5 +209,24 @@ class MemberServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("사용자 로그아웃 테스트")
+    class LogoutMember {
 
+        @Nested
+        @DisplayName("정상 케이스")
+        class SuccessCase {
+            @Test
+            @DisplayName("로그아웃에 성공한다")
+            void memberLogout() {
+                //given, when
+                when(deniedTokenRepository.save(any())).thenReturn(DeniedToken.builder().token("access-token").memberEmail(email).build());
+
+                String deniedMemberEmail = memberService.logoutMember(email, "access-token");
+
+                //then
+                assertThat(deniedMemberEmail).isEqualTo(email);
+            }
+        }
+    }
 }

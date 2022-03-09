@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import shlee.exam.idus.domain.member.dto.domain.MemberAccount;
 import shlee.exam.idus.domain.member.dto.request.LoginMemberDto;
 import shlee.exam.idus.domain.member.dto.request.PostMemberDto;
+import shlee.exam.idus.domain.member.entity.DeniedToken;
 import shlee.exam.idus.domain.member.entity.Member;
+import shlee.exam.idus.domain.member.repository.DeniedTokenRepository;
 import shlee.exam.idus.domain.member.repository.MemberRepository;
 import shlee.exam.idus.global.exception.exceptions.MemberEmailDuplicateException;
 import shlee.exam.idus.global.exception.exceptions.MemberNotFountException;
@@ -21,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final DeniedTokenRepository deniedTokenRepository;
 
     //회원 생성
     @Transactional
@@ -50,8 +53,17 @@ public class MemberService {
 
     //비밀번호 검증
     private void validPassword(String requestPassword, String accountPassword) {
-        if(!passwordEncoder.matches(requestPassword, accountPassword))
+        if (!passwordEncoder.matches(requestPassword, accountPassword))
             throw new MemberPasswordNotMatchFountException("비밀번호가 일치하지 않습니다.");
+    }
+
+    //회원 로그아웃
+    public String logoutMember(String memberEmail, String accessToken) {
+        return deniedTokenRepository.save(DeniedToken.builder()
+                .token(accessToken)
+                .memberEmail(memberEmail)
+                .build()
+        ).getMemberEmail();
     }
 
 }
