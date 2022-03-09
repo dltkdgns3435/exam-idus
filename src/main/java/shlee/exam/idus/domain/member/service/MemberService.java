@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shlee.exam.idus.domain.member.dto.domain.MemberAccount;
+import shlee.exam.idus.domain.member.dto.domain.MemberDetailInfo;
 import shlee.exam.idus.domain.member.dto.request.LoginMemberDto;
 import shlee.exam.idus.domain.member.dto.request.PostMemberDto;
 import shlee.exam.idus.domain.member.entity.DeniedToken;
@@ -64,6 +65,11 @@ public class MemberService {
                 .memberEmail(memberEmail)
                 .build()
         ).getMemberEmail();
+    }
+
+    public MemberDetailInfo readMemberDetail(String memberEmail) {
+        return memberRepository.findMemberDetailInfoByEmail(memberEmail)
+                .orElseThrow(() -> new MemberNotFountException("존재하지 않는 사용자 입니다."));
     }
 
 }

@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import shlee.exam.idus.domain.member.dto.domain.MemberAccount;
+import shlee.exam.idus.domain.member.dto.domain.MemberDetailInfo;
 import shlee.exam.idus.domain.member.dto.request.LoginMemberDto;
 import shlee.exam.idus.domain.member.dto.request.PostMemberDto;
 import shlee.exam.idus.domain.member.entity.DeniedToken;
@@ -227,6 +228,56 @@ class MemberServiceTest {
                 //then
                 assertThat(deniedMemberEmail).isEqualTo(email);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자 상세정보 조회 테스트")
+    class ReadMemberDetail {
+
+        @Nested
+        @DisplayName("정상 케이스")
+        class SuccessCase {
+            @Test
+            @DisplayName("사용자 정보 조회에 성공한다.")
+            void readMemberDetail() {
+                //given, when
+                when(memberRepository.findMemberDetailInfoByEmail(email)).thenReturn(Optional.of(MemberDetailInfo.builder()
+                        .name(name)
+                        .nickname(nickname)
+                        .phone(phone)
+                        .email(email)
+                        .sex(Sex.valueOf(sex))
+                        .build()));
+
+                MemberDetailInfo memberDetailInfo = memberService.readMemberDetail(email);
+
+                //then
+                assertThat(memberDetailInfo.getName()).isEqualTo(name);
+                assertThat(memberDetailInfo.getNickname()).isEqualTo(nickname);
+                assertThat(memberDetailInfo.getPhone()).isEqualTo(phone);
+                assertThat(memberDetailInfo.getEmail()).isEqualTo(email);
+                assertThat(memberDetailInfo.getSex()).isEqualTo(Sex.valueOf(sex));
+            }
+
+        }
+
+        @Nested
+        @DisplayName("비정상 케이스")
+        class FailCase {
+            @Test
+            @DisplayName("존재하지 않는 사용자 이메일을 입력하면 사용자 정보 조회에 실패한다.")
+            void readMemberDetailFailByNotFoundMember() {
+                //given, when
+                when(memberRepository.findMemberDetailInfoByEmail(email)).thenReturn(Optional.empty());
+
+                MemberNotFountException exception = assertThrows(MemberNotFountException.class, () -> memberService.readMemberDetail(email));
+
+                //then
+                assertThat(exception.getMessage()).isEqualTo("존재하지 않는 사용자 입니다.");
+
+            }
+
         }
     }
 }
