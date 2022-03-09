@@ -13,6 +13,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shlee.exam.idus.domain.member.repository.DeniedTokenRepository;
+import shlee.exam.idus.global.exception.handler.CommonAccessDeniedHandler;
+import shlee.exam.idus.global.exception.handler.CommonAuthenticationEntryPoint;
 import shlee.exam.idus.global.jwt.JwtTokenProvider;
 
 import java.util.Arrays;
@@ -37,13 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //cors는 임의로 모든 접속에 대해 다 허용해 두었다.
         http.cors().configurationSource(corsConfiguration());
-
+        http.headers().frameOptions().sameOrigin();
         //
         http
                 .authorizeRequests()
                 .anyRequest().permitAll();
         http
-                .apply(new JwtSecurityConfig(jwtTokenProvider, deniedTokenRepository));
+                .apply(new JwtSecurityConfig(jwtTokenProvider, deniedTokenRepository))
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(new CommonAuthenticationEntryPoint())
+                .accessDeniedHandler(new CommonAccessDeniedHandler());
     }
 
 
