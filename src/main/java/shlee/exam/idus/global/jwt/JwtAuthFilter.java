@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import shlee.exam.idus.domain.member.repository.DeniedTokenRepository;
+import shlee.exam.idus.global.exception.exceptions.MemberAlreadyLogoutException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,10 +26,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             if(tokenOpn.isPresent()){
                 String token = tokenOpn.get();
-                if (jwtTokenProvider.validateToken(token) && deniedTokenRepository.findById(token).isPresent()) {
+                boolean ieDenied = deniedTokenRepository.findById(token).isPresent();
+
+                if (jwtTokenProvider.validateToken(token) && !ieDenied) {
                     Authentication auth = jwtTokenProvider.getAuthentication(token);
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                } else {
+                }
+                else if(ieDenied){
+                    request.setAttribute("exception", new MemberAlreadyLogoutException("이미 로그아웃된 사용자 입니다."));
+                }
+                else {
                     SecurityContextHolder.clearContext();
                 }
             }
