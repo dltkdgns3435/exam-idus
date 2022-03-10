@@ -16,8 +16,8 @@ class OrderTest {
                 .build();
         
         //then, print
-        System.out.println("order.getId() = " + order.getId());
-        assertThat(order.getId().length()).isEqualTo(12);
+        System.out.println("order.getId() = " + order.getOrderNo());
+        assertThat(order.getOrderNo().length()).isEqualTo(12);
     }
 
 }
