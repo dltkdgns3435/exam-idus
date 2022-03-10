@@ -67,6 +67,7 @@ public class MemberService {
         ).getMemberEmail();
     }
 
+    //회원 상세정보 조회
     public MemberDetailInfo readMemberDetail(String memberEmail) {
         return memberRepository.findMemberDetailInfoByEmail(memberEmail)
                 .orElseThrow(() -> new MemberNotFoundException("권한이 없습니다."));
