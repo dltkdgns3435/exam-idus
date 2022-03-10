@@ -69,7 +69,7 @@ public class MemberService {
 
     public MemberDetailInfo readMemberDetail(String memberEmail) {
         return memberRepository.findMemberDetailInfoByEmail(memberEmail)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new MemberNotFoundException("권한이 없습니다."));
     }
 
 }

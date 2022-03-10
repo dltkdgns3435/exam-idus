@@ -274,7 +274,7 @@ class MemberServiceTest {
                 MemberNotFoundException exception = assertThrows(MemberNotFoundException.class, () -> memberService.readMemberDetail(email));
 
                 //then
-                assertThat(exception.getMessage()).isEqualTo("존재하지 않는 사용자 입니다.");
+                assertThat(exception.getMessage()).isEqualTo("권한이 없습니다.");
 
             }
 
