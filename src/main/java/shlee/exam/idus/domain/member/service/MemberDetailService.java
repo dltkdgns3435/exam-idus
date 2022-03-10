@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import shlee.exam.idus.domain.member.dto.domain.MemberAccount;
 import shlee.exam.idus.domain.member.repository.MemberRepository;
-import shlee.exam.idus.global.exception.exceptions.MemberNotFountException;
+import shlee.exam.idus.global.exception.exceptions.MemberNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class MemberDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         MemberAccount account = memberRepository.findMemberAccountByEmail(email)
-                .orElseThrow(() -> new MemberNotFountException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 사용자 입니다."));
 
         return User.builder()
                 .username(account.getEmail())
