@@ -12,6 +12,22 @@ spring:
     username: sa
     password:
 
+#  datasource:
+#    master:
+#      hikari:
+#        jdbc-url: master-url
+#        username:
+#        password:
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#    slave:
+#      hikari:
+#        jdbc-url: slave-url
+#        username:
+#        password:
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+
+
   jpa:
     show-sql: true
     hibernate:
