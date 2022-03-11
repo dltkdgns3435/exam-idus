@@ -3,6 +3,7 @@ package shlee.exam.idus.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -43,6 +44,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //
         http
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/member").permitAll()
+                .antMatchers( "/member/login").permitAll()
+                .antMatchers( "/member/logout").hasRole("MEMBER")
+                .antMatchers( "/member").hasRole("MEMBER")
+                .antMatchers( "/order/**").hasRole("MEMBER")
                 .anyRequest().permitAll();
         http
                 .apply(new JwtSecurityConfig(jwtTokenProvider, deniedTokenRepository))
