@@ -5,8 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 import shlee.exam.idus.domain.member.enums.Sex;
+import shlee.exam.idus.domain.order.entity.Order;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @SequenceGenerator(
@@ -38,6 +41,15 @@ public class Member {
     @Column(length = 1)
     @Enumerated(EnumType.STRING)
     private Sex sex;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    private List<Order> orders;
+
+    public void registerOrder(Order order){
+        if(orders == null) orders = new ArrayList<>();
+        orders.add(order);
+    }
 
     @Builder
     public Member(String name, String nickname, String password, String phone, String email, Sex sex) {
