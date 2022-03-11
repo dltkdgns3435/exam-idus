@@ -37,6 +37,7 @@ public class Order {
 
     public void registerMember(Member member){
         this.member = member;
+        this.member.registerOrder(this);
     }
 
     @Builder
