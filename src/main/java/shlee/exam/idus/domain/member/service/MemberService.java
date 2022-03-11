@@ -43,6 +43,7 @@ public class MemberService {
     }
 
     //회원 로그인
+    @Transactional(readOnly = true)
     public JwtToken loginMember(LoginMemberDto loginMemberDto) {
         MemberAccount account = memberRepository.findMemberAccountByEmail(loginMemberDto.getEmail())
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 사용자 입니다."));
