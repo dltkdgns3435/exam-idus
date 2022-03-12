@@ -2,7 +2,6 @@ package shlee.exam.idus.domain.order.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import shlee.exam.idus.domain.order.dto.domain.MemberOrderDetail;
 import shlee.exam.idus.domain.order.dto.domain.OrderDetail;
 import shlee.exam.idus.domain.order.dto.request.MemberOrderQuery;
-import shlee.exam.idus.domain.order.entity.QOrder;
 
 import java.util.List;
 import java.util.Optional;

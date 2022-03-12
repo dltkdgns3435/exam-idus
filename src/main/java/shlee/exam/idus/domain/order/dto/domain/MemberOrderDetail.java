@@ -18,8 +18,4 @@ public class MemberOrderDetail {
     private String productName;
     private LocalDateTime orderAt;
 
-    interface OrderInfo{
-        String getOrderNo();
-        LocalDateTime getOrderAt();
-    }
 }

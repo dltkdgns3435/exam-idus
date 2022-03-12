@@ -41,7 +41,6 @@ public class OrderController {
                 .size(size)
                 .build();
 
-
         return new ResponseEntity<>(orderService.readMemberOrderDetailList(query), HttpStatus.OK);
     }
 
